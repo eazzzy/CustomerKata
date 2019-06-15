@@ -1,5 +1,9 @@
 using customerdata.lib;
+using customerdata.lib.Extensions;
+using GenFu;
+using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -8,6 +12,14 @@ namespace customer.tests
 {
     public class CustomerUnitTests
     {
+        private readonly Mock<ICustomerReadDataStore> _customerReadDataStore;
+
+        public CustomerUnitTests()
+        {
+            _customerReadDataStore = new Mock<ICustomerReadDataStore>();
+            _customerReadDataStore.SetupAllProperties();
+        }
+
         [Fact]
         public void DataStore_Returns_ArgumentNullWhenFileNameNotPassed()
         {
@@ -53,6 +65,40 @@ namespace customer.tests
             var dto = (CustomerDto)cust;
 
             Assert.True(!string.IsNullOrEmpty(dto.first_name));
+        }
+
+        [Fact]
+        public void StringExtension_RemovesSpecialCharacters()
+        {
+            var teststring = "\"abc\"";
+
+            Assert.True(!teststring.RemoveSpecialCharacters().Contains('"'));
+        }
+
+        [Fact]
+        public async Task DataStore_GetAll_ReturnsData()
+        {
+            _customerReadDataStore.Setup(x => x.SelectAll()).ReturnsAsync(() =>
+            new List<Customer>() { A.New<Customer>() });
+
+            var customerService = new CustomerService(_customerReadDataStore.Object);
+
+            var result = await customerService.GetAll();
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task DataStore_Search_ReturnsData()
+        {
+            _customerReadDataStore.Setup(x => x.Search(It.IsAny<string>())).ReturnsAsync(() =>
+            new List<Customer>() { new Customer { FirstName = "TestName" } });
+
+            var customerService = new CustomerService(_customerReadDataStore.Object);
+
+            var result = await customerService.Search("Test");
+
+            Assert.NotNull(result);
         }
     }
 }
