@@ -7,17 +7,16 @@ namespace customer.api.Models
 {
     public class AppSettings
     {
-        public Swashbuckle swashbuckle { get; set; }
-        public string datafile { get; set; }
+        public Swashbuckle Swashbuckle { get; set; }
+        public string Datafile { get; set; }
     }
 
     public class Swashbuckle
     {
-        public string endpointUrl { get; set; }
-        public string endpointName { get; set; }
-        public string title { get; set; }
-        public string version { get; set; }
-        public string description { get; set; }
-        public string host { get; set; }
+        public string EndpointUrl { get; set; }
+        public string EndpointName { get; set; }
+        public string Title { get; set; }
+        public string Version { get; set; }
+        public string Description { get; set; }
     }
 }

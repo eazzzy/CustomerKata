@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using customer.api.Models;
+using customerdata.lib;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,9 +30,9 @@ namespace customer.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettinigs"));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
             {
@@ -42,6 +43,11 @@ namespace customer.api
                     Description = Configuration[$"{sbConfigSection}Description"]
                 });
             });
+
+            services
+                .AddTransient(typeof(ICustomerReadDataStore),
+                    x => new CustomerReadDataStore(Configuration["AppSettings:Datafile"]))
+                .AddTransient<ICustomerService, CustomerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

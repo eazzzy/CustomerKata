@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using customerdata.lib;
 using Microsoft.AspNetCore.Mvc;
 
 namespace customer.api.Controllers
@@ -10,36 +11,31 @@ namespace customer.api.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        // GET api/customer
+        public ICustomerService _customerService { get; set; }
+
+        public CustomerController(ICustomerService customerService)
+        {
+            _customerService = customerService;
+        }
+
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _customerService.GetAll();
+
+            return (result != null && result.Any())
+                ? (IActionResult)Ok(Models.CustomerModel.Parse(result))
+                : NoContent();
         }
 
-        // GET api/customer/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("{query}")]
+        public async Task<IActionResult> Search(string query)
         {
-            return "value";
-        }
+            var result = await _customerService.Search(query);
 
-        // POST api/customer
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/customer/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/customer/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return (result != null && result.Any())
+                ? (IActionResult)Ok(Models.CustomerModel.Parse(result))
+                : NoContent();
         }
     }
 }
