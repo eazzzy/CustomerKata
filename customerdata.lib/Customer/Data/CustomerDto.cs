@@ -17,5 +17,26 @@ namespace customerdata.lib
         public string phone2 { get; set; }
         public string email { get; set; }
         public string web { get; set; }
+
+        public static explicit operator Customer(CustomerDto model)
+        {
+            return new Customer
+            {
+                Address = new Address
+                {
+                    City = model?.city,
+                    PostCode = model?.post,
+                    State = model?.state,
+                    Street = model?.address
+                },
+                CompanyName = model?.company_name,
+                Email = model?.email,
+                FirstName = model?.first_name,
+                LastName = model?.last_name,
+                Phone1 = model?.phone1,
+                Phone2 = model?.phone2,
+                Web = model?.web
+            };
+        }
     }
 }

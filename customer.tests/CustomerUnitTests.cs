@@ -28,5 +28,31 @@ namespace customer.tests
                 await dataStore.Select();
             });
         }
+
+        [Fact]
+        public void CustomerDto_Maps_ToCustomer()
+        {
+            var dto = new CustomerDto
+            {
+                first_name = "name"
+            };
+
+            var cust = (Customer)dto;
+
+            Assert.True(!string.IsNullOrEmpty(cust.FirstName));
+        }
+
+        [Fact]
+        public void Customer_Maps_ToCustomerDto()
+        {
+            var cust = new Customer
+            {
+                FirstName = "name"
+            };
+
+            var dto = (CustomerDto)cust;
+
+            Assert.True(!string.IsNullOrEmpty(dto.first_name));
+        }
     }
 }
