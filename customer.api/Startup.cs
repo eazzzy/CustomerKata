@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using customer.api.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,11 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace customer.api
 {
     public class Startup
     {
+        private readonly string sbConfigSection = "AppSettings:Swashbuckle:";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,6 +30,18 @@ namespace customer.api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettinigs"));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc(Configuration[$"{sbConfigSection}Version"], new Info
+                {
+                    Version = Configuration[$"{sbConfigSection}Version"],
+                    Title = Configuration[$"{sbConfigSection}Title"],
+                    Description = Configuration[$"{sbConfigSection}Description"]
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +59,12 @@ namespace customer.api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint(Configuration[$"{sbConfigSection}EndpointUrl"],
+                    Configuration[$"{sbConfigSection}EndpointName"]);
+            });
         }
     }
 }
