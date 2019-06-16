@@ -45,6 +45,16 @@ namespace customer.api.Controllers
             }
         }
 
+        /// <summary>
+        /// Search
+        /// </summary>
+        /// <param name="query">query</param>
+        /// <response code="200">Ok</response>
+        /// <response code="204">No Content</response>
+        /// <response code="400">Bad Request, invalid information</response>
+        /// <response code="401">Unauthorised</response>
+        /// <response code="404">Not found</response>
+        /// <response code="500">Internal error</response>
         [HttpGet("{query}")]
         public async Task<IActionResult> Search(string query)
         {
