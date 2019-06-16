@@ -26,20 +26,10 @@ namespace customer.api.Models
         {
             return new CustomerModel
             {
-                Address = new Address
-                {
-                    City = model?.Address?.City,
-                    PostCode = model?.Address?.PostCode,
-                    State = model?.Address?.State,
-                    Street = model?.Address?.Street
-                },
-                CompanyName = model?.CompanyName,           
                 Email = model?.Email,
                 FirstName = model?.FirstName,
                 LastName = model?.LastName,
-                Phone1 = model?.Phone1,
-                Phone2 = model?.Phone2,
-                Web = model?.Web
+                Phone1 = model?.Phone1
             };
         }
     }
