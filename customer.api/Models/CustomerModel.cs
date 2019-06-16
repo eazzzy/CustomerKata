@@ -10,8 +10,12 @@ namespace customer.api.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string CompanyName { get; set; }
+        public IAddress Address { get; set; }
         public string Phone1 { get; set; }
+        public string Phone2 { get; set; }
         public string Email { get; set; }
+        public string Web { get; set; }
 
         public static IEnumerable<Models.CustomerModel> Parse(IEnumerable<global::customerdata.lib.Customer> models)
         {
@@ -22,10 +26,20 @@ namespace customer.api.Models
         {
             return new CustomerModel
             {
-                FirstName = model.FirstName,
-                Email = model.Email,
-                LastName = model.LastName,
-                Phone1 = model.Phone1
+                Address = new Address
+                {
+                    City = model?.Address?.City,
+                    PostCode = model?.Address?.PostCode,
+                    State = model?.Address?.State,
+                    Street = model?.Address?.Street
+                },
+                CompanyName = model?.CompanyName,           
+                Email = model?.Email,
+                FirstName = model?.FirstName,
+                LastName = model?.LastName,
+                Phone1 = model?.Phone1,
+                Phone2 = model?.Phone2,
+                Web = model?.Web
             };
         }
     }
