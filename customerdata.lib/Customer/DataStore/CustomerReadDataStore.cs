@@ -20,19 +20,17 @@ namespace customerdata.lib
         {
             var items = await new DataStore(DataStoreFileName).Select();
 
-            return items.Select(cust => (Customer)cust);
+            return items?.Select(cust => (Customer)cust);
         }
 
         public async Task<IEnumerable<Customer>> Search(string query)
         {
             var items = await SelectAll();
             
-            var filtered = items.Where(i => i.FirstName.Contains(query)
+            return items?.Where(i => i.FirstName.Contains(query)
              || i.LastName.Contains(query)
              || i.Email.Contains(query)
              || i.Phone1.Contains(query));
-
-            return filtered;
         }
     }
 }

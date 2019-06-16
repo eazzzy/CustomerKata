@@ -48,11 +48,18 @@ namespace customer.api.Controllers
         [HttpGet("{query}")]
         public async Task<IActionResult> Search(string query)
         {
-            var result = await _customerService.Search(query);
+            try
+            {
+                var result = await _customerService.Search(query);
 
-            return (result != null && result.Any())
-                ? (IActionResult)Ok(Models.CustomerModel.Parse(result))
-                : NoContent();
+                return (result != null && result.Any())
+                    ? (IActionResult)Ok(Models.CustomerModel.Parse(result))
+                    : NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
         }
     }
 }
