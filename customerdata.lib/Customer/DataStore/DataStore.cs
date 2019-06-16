@@ -39,7 +39,7 @@ namespace customerdata.lib
                                     email = data?[9],
                                     web = data?[10]
                                 };
-                return customers;
+                return customers.Skip(1);
             }
             catch (FileNotFoundException fnf)
             {
