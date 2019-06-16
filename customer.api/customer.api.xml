@@ -4,5 +4,16 @@
         <name>customer.api</name>
     </assembly>
     <members>
+        <member name="M:customer.api.Controllers.CustomerController.Get">
+            <summary>
+            Get All
+            </summary>
+            <response code="200">Ok</response>
+            <response code="204">No Content</response>
+            <response code="400">Bad Request, invalid information</response>
+            <response code="401">Unauthorised</response>
+            <response code="404">Not found</response>
+            <response code="500">Internal error</response>
+        </member>
     </members>
 </doc>

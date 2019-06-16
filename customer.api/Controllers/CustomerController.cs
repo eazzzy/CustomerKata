@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using customerdata.lib;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,30 @@ namespace customer.api.Controllers
             _customerService = customerService;
         }
 
+        /// <summary>
+        /// Get All
+        /// </summary>
+        /// <response code="200">Ok</response>
+        /// <response code="204">No Content</response>
+        /// <response code="400">Bad Request, invalid information</response>
+        /// <response code="401">Unauthorised</response>
+        /// <response code="404">Not found</response>
+        /// <response code="500">Internal error</response>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _customerService.GetAll();
+            try
+            {
+                var result = await _customerService.GetAll();
 
-            return (result != null && result.Any())
-                ? (IActionResult)Ok(Models.CustomerModel.Parse(result))
-                : NoContent();
+                return (result != null && result.Any())
+                    ? (IActionResult)Ok(Models.CustomerModel.Parse(result))
+                    : NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
         }
 
         [HttpGet("{query}")]

@@ -32,7 +32,13 @@ namespace customer.api
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .AllowCredentials();
+            }));
 
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +54,8 @@ namespace customer.api
                 .AddTransient(typeof(ICustomerReadDataStore),
                     x => new CustomerReadDataStore(Configuration["AppSettings:Datafile"]))
                 .AddTransient<ICustomerService, CustomerService>();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,14 +71,15 @@ namespace customer.api
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint(Configuration[$"{sbConfigSection}EndpointUrl"],
                     Configuration[$"{sbConfigSection}EndpointName"]);
             });
+            app.UseCors("MyPolicy");
+
+            app.UseMvc();
         }
     }
 }
