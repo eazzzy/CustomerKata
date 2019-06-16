@@ -1,6 +1,7 @@
 ##Assumptions
 -Postcode in the example are numeric because these are australian addresses, i have made it string so that we can deal with global postcodes (i.e UK) for when the application is launces globally.
 
+
 ##Design Considerations
 -I would never use a csv in this manner as there are many areas of failure, databases address alot of these issues and therefore i have not tried solving all of those issues. For instance file locking might occur when starting to write to this file while also reading from the file at the same time.  Because this excersize does not require any write operations i did not cater for it.
 -I used regex to split the csv columns file in order to cater for the special characters in there, using data in better formats will reduce bugs introduced doing custom formatting because of the data structure.
